@@ -1,0 +1,49 @@
+ Know linux bit version
+    uname -u
+
+1) Very First, Update linux packages
+    sudo apt-get update
+
+2) sudo apt-get install postgresql postgresql-contrib
+
+3) Switch to postgres user
+    sudo su postgres
+
+4) enter -> psql
+
+5) List the database
+    \l
+
+6) List Users
+    \du
+
+
+7) Change User Password
+    ALTER USER postgres WITH PASSWORD 'root';
+
+8) Create New User
+    CREATE USER kartik WITH PASSWORD 'anypaswd';    
+
+9) Change User Permission
+    ALTER USER kartik WITH SUPERUSER;
+
+10) Remove User
+    DROP USER kartik;    
+
+
+11) Switch to Datatabase
+    \c db_name    
+
+------------------------------------------------------------------ PGADMIN 3 -----------------------------------------------------------
+
+i)      Name = localhost
+ii)     Host = 127.0.0.1
+iii)    Port = 5432
+iv)     username = postgres
+v)      Password = postgres paswd (user paswd)
+
+
+------------------------------------------------------------------ WITH DOCKER ------------------------------------------------------------
+
+1) go to docker-compose file
+2) When pgadmin4 is running on browser, (connection tab) put postgres IP private address while logging in in pgadmin SERVER, def name - postgres, Password would be "POSTGRES_PASSWORD" (postgres container Password -> docker-compose ) 
