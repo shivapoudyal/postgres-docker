@@ -47,3 +47,7 @@ v)      Password = postgres paswd (user paswd)
 
 1) go to docker-compose file
 2) When pgadmin4 is running on browser, (connection tab) put postgres IP private address while logging in in pgadmin SERVER, def name - postgres, Password would be "POSTGRES_PASSWORD" (postgres container Password -> docker-compose ) 
+
+
+---------------------------------------------------------------- LOGIN TO POSTGES USING CLI --------------------------------------------
+psl -U username -h hostname
