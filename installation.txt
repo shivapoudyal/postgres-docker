@@ -50,4 +50,10 @@ v)      Password = postgres paswd (user paswd)
 
 
 ---------------------------------------------------------------- LOGIN TO POSTGES USING CLI --------------------------------------------
-psl -U username -h hostname
+psl -U username -h hostname -W password
+
+Connection options (hints):
+  -h HOSTNAME database server host or socket directory (default: "local socket")
+  -p PORT database server port (default: "5432")
+  -U NAME database user name (default: "root")
+  -W prompt for password (should happen automatically)
