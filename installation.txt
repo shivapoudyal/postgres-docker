@@ -36,6 +36,12 @@
     
 12) List Tables
     \dt *.*
+    
+13) Create Schema
+    create schema shiva;
+    
+14) List Schemas
+    select schema_name from information_schema.schemata;  
 
 ------------------------------------------------------------------ PGADMIN 3 -----------------------------------------------------------
 
