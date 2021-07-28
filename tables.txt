@@ -1,0 +1,165 @@
+mason/sql/change_logs/branch.1.1/change_log_TSK15483.sql
+
+CREATE TABLE mobile_app.app_notification_records(
+                sno  SERIAL PRIMARY KEY,
+                notification_id           TEXT      NOT NULL,
+                user_id                   INT       NOT NULL,
+                msg_data                  TEXT      NOT NULL,
+                os_type                   CHAR(50) NOT NULL,
+                status                    CHAR(50) NOT NULL,
+                notification_status       CHAR(50) NOT NULL DEFAULT 'UNREAD',
+                notification_type         CHAR(50) NULL,
+                summary_text              TEXT     NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                );
+
+CREATE TABLE mobile_app.quick_login_links(
+                sno  SERIAL PRIMARY KEY,
+                link_name                TEXT     NOT NULL,
+                login_position           CHAR(50) NULL,
+                logout_position          CHAR(50) NULL,
+				link_for                 CHAR(50) NOT NULL,
+				is_new                   CHAR(50) NOT NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                );
+				
+CREATE TABLE mobile_app.meeting_slot_bookings(
+                sno  					  SERIAL PRIMARY KEY,
+                user_id                   INTEGER       NULL,
+                userid                    INTEGER       NOT NULL,
+                profile_id                INTEGER       NOT NULL,
+                prefered_time_slot        VARCHAR(50)  NOT NULL,
+                call_purpose       		  VARCHAR(50)  NOT NULL,
+                call_medium         	  VARCHAR(50)  NOT NULL,
+                meeting_date       		  INTEGER NOT NULL DEFAULT general.current_date_id(),
+                punctual_info       	  BOOLEAN   NOT NULL DEFAULT TRUE,
+                created_at 				  INTEGER DEFAULT date_part('epoch'::text, now()),
+                updated_at 			      INTEGER DEFAULT date_part('epoch'::text, now()),
+				UNIQUE (user_id,userid,meeting_date)
+                );
+				
+			ALTER TABLE mobile_app.meeting_slot_bookings  ADD CONSTRAINT unique_user_meeting UNIQUE(user_id,userid,meeting_date);
+
+			CREATE INDEX meeting_slot_booking_user_id_idx on mobile_app.meeting_slot_bookings (user_id);
+			CREATE INDEX meeting_slot_booking_userid_idx on mobile_app.meeting_slot_bookings (userid);
+			CREATE INDEX meeting_slot_booking_profile_id_idx on mobile_app.meeting_slot_bookings (profile_id);
+			CREATE INDEX meeting_slot_booking_prefered_time_slot_idx on mobile_app.meeting_slot_bookings (prefered_time_slot);
+			CREATE INDEX meeting_slot_booking_call_purpose_idx on mobile_app.meeting_slot_bookings (call_purpose);
+			CREATE INDEX meeting_slot_booking_call_medium_idx on mobile_app.meeting_slot_bookings (call_medium);
+			CREATE INDEX meeting_slot_booking_meeting_date_idx on mobile_app.meeting_slot_bookings (meeting_date);
+
+CREATE TABLE mobile_app.meeting_slot_booking_comments(
+                id  			  		  SERIAL PRIMARY KEY,
+                slot_booking_sno          INTEGER    REFERENCES mobile_app.meeting_slot_bookings(sno),
+                slot_booking_comments     TEXT      NULL,
+                slot_booking_status       VARCHAR(50) NOT NULL,
+                created_at 				  INTEGER DEFAULT date_part('epoch'::text, now())
+                );
+				
+			CREATE INDEX meeting_slot_booking_comments_booking_sno_idx on mobile_app.meeting_slot_booking_comments (slot_booking_sno);
+			CREATE INDEX meeting_slot_booking_comments_status_idx on mobile_app.meeting_slot_booking_comments (slot_booking_status);		
+				
+				
+ALTER TABLE mobile_app.meeting_slot_bookings DROP COLUMN prefered_time_slot;				
+ALTER TABLE mobile_app.meeting_slot_bookings ADD COLUMN start_time_slot INTEGER;
+ALTER TABLE mobile_app.meeting_slot_bookings ADD COLUMN end_time_slot INTEGER;
+ALTER TABLE mobile_app.meeting_slot_bookings ADD COLUMN user_comments VARCHAR DEFAULT NULL;
+DROP index mobile_app.meeting_slot_booking_prefered_time_slot_idx;
+CREATE INDEX meeting_slot_booking_start_time_slot_idx on mobile_app.meeting_slot_bookings (start_time_slot);
+CREATE INDEX meeting_slot_booking_end_time_slot_idx on mobile_app.meeting_slot_bookings (end_time_slot);
+CREATE INDEX meeting_slot_booking_user_comments_idx on mobile_app.meeting_slot_bookings (user_comments);
+
+				
+ALTER TABLE mobile_app.slot_bookings DROP COLUMN first_action_date, rm_comments, slot_booking_comment, slot_booking_status;				
+
+ALTER TABLE mobile_app.slot_bookings ADD COLUMN rfi_id int DEFAULT NULL;
+
+DROP TABLE IF EXISTS mobile_app.slot_questionnaires;
+DROP TABLE IF EXISTS mobile_app.meeting_slot_feedback_info;
+
+ALTER TABLE mobile_app.slot_bookings RENAME user_id TO userid;
+
+ALTER TABLE mobile_app.slot_bookings ALTER COLUMN slot_booking_comments DROP NOT NULL;
+
+CREATE INDEX userid_idx ON mobile_app.slot_bookings (userid);
+
+CREATE INDEX slot_booking_user_id_idx on mobile_app.slot_bookings (user_id);
+CREATE INDEX slot_booking_userid_idx on mobile_app.slot_bookings (userid);
+CREATE INDEX slot_booking_profile_id_idx on mobile_app.slot_bookings (profile_id);
+CREATE INDEX slot_booking_prefered_time_slot_idx on mobile_app.slot_bookings (prefered_time_slot);
+CREATE INDEX slot_booking_call_purpose_idx on mobile_app.slot_bookings (call_purpose);
+CREATE INDEX slot_booking_call_medium_idx on mobile_app.slot_bookings (call_medium);
+
+CREATE INDEX slot_booking_comments_booking_sno_idx on mobile_app.slot_booking_comments (slot_booking_sno);
+CREATE INDEX slot_booking_comments_status_idx on mobile_app.slot_booking_comments (slot_booking_status);
+
+
+ALTER TABLE mobile_app.slot_questionnaires ADD COLUMN question_order INTEGER() DEFAULT 0;
+
+ALTER TABLE mobile_app.slot_booking_comments add constraint slot_booking_sno foreign key (sno) references mobile_app.slot_bookings(sno);
+
+----------------------------------------------- SLOT_QUESTIONARE -------------------------------
+
+CREATE TABLE mobile_app.slot_questionnaires(
+                qid  					  SERIAL  PRIMARY KEY,
+				question_order       	  INTEGER  DEFAULT 0,
+                questions                 TEXT 	  NOT NULL,
+				feedback_type       	  VARCHAR(50) NOT NULL,
+                status                    INTEGER DEFAULT 1,
+                created_at 				  INTEGER DEFAULT date_part('epoch'::text, now())
+                );
+				
+CREATE INDEX slot_questionnaire_questions_idx on mobile_app.slot_questionnaires (questions);				
+CREATE INDEX slot_questionnaire_feedback_type_idx on mobile_app.slot_questionnaires (feedback_type);				
+CREATE INDEX slot_questionnaire_status_idx on mobile_app.slot_questionnaires (status);
+CREATE INDEX slot_questionnaire_question_order_idx on mobile_app.slot_questionnaires (question_order);
+
+CREATE INDEX slot_questionnaire_question_type_idx on mobile_app.slot_questionnaires (question_type);
+CREATE INDEX slot_questionnaire_parent_qid_idx on mobile_app.slot_questionnaires (parent_qid);
+
+CREATE TABLE mobile_app.meeting_slot_feedback_info(
+                fid  					  SERIAL  PRIMARY KEY,
+                slot_booking_sno          INTEGER REFERENCES mobile_app.meeting_slot_bookings(sno),
+                feedback_answers          TEXT NOT NULL,
+				overall_rating       	  INTEGER NOT NULL,
+				user_feedback_comments    TEXT NULL,
+                created_at 				  INTEGER DEFAULT date_part('epoch'::text, now()),
+                updated_at 				  INTEGER DEFAULT date_part('epoch'::text, now()),
+				UNIQUE (slot_booking_sno)
+                );
+
+CREATE INDEX meeting_slot_feedback_info_booking_sno_idx on mobile_app.meeting_slot_feedback_info (slot_booking_sno);				
+CREATE INDEX meeting_slot_feedback_info_answers_idx on mobile_app.meeting_slot_feedback_info (feedback_answers);				
+CREATE INDEX meeting_slot_feedback_info_overall_rating_idx on mobile_app.meeting_slot_feedback_info (overall_rating);				
+CREATE INDEX meeting_slot_feedback_info_comments_idx on mobile_app.meeting_slot_feedback_info (user_feedback_comments);				
+
+------------------------------------- USER RELATED TABLES ----------------------
+
+ALTER TABLE mobile_app.slot_questionnaires ADD COLUMN question_type VARCHAR(50) DEFAULT NULL;
+ALTER TABLE mobile_app.slot_questionnaires ADD COLUMN parent_qid INTEGER DEFAULT 0;
+ALTER TABLE mobile_app.slot_questionnaires ADD COLUMN updated_at INTEGER DEFAULT date_part('epoch'::text, now());
+
+
+CREATE INDEX slot_questionnaire_question_type_idx on mobile_app.slot_questionnaires (question_type);
+CREATE INDEX slot_questionnaire_parent_qid_idx on mobile_app.slot_questionnaires (parent_qid);
+
+tradeindia employee -> user_id -> erp.employees (tbl)
+tradeindia customer -> userid -> general.user_accounts (tbl)
+tradeindia company -> profile_id -> general.profile_master (tbl)
+
+ALTER TABLE mobile_app.slot_questionnaires DROP COLUMN question_type;
+ALTER TABLE mobile_app.slot_questionnaires DROP COLUMN parent_qid;
+
+ALTER TABLE mobile_app.meeting_slot_bookings ADD COLUMN is_feedback_done INTEGER DEFAULT 0;
+CREATE INDEX meeting_slot_booking_is_feedback_done_idx on mobile_app.meeting_slot_bookings (is_feedback_done);
+
+ALTER TABLE mobile_app.meeting_slot_feedback_info ALTER COLUMN overall_rating TYPE DECIMAL USING overall_rating::numeric;
+
+
+ALTER TABLE general.important_trade_leads ADD COLUMN status INTEGER DEFAULT 1;
+CREATE INDEX important_mark_status_idx on general.important_trade_leads (status);
+
+
+
