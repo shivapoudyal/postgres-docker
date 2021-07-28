@@ -161,5 +161,13 @@ ALTER TABLE mobile_app.meeting_slot_feedback_info ALTER COLUMN overall_rating TY
 ALTER TABLE general.important_trade_leads ADD COLUMN status INTEGER DEFAULT 1;
 CREATE INDEX important_mark_status_idx on general.important_trade_leads (status);
 
+--------------------------------------------------- CREATE SIMPLE TABLE -------------------------------------------------
 
-
+CREATE TABLE shiva.states(
+                sno  SERIAL PRIMARY KEY,
+                state               CHAR(50) NULL,
+                country           CHAR(50) NULL,
+				status             INTEGER  DEFAULT 1,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                );
