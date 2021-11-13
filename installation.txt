@@ -66,3 +66,21 @@ Connection options (hints):
   -p PORT database server port (default: "5432")
   -U NAME database user name (default: "root")
   -W prompt for password (should happen automatically)
+  
+  
+  
+  ---------------------------------------------------------------- CREATE TABLE --------------------------------------------
+   
+  CREATE TABLE public.shiva_table(
+                id  			  		  SERIAL PRIMARY KEY,
+                name     TEXT      NULL,
+                status       VARCHAR(50) NOT NULL,
+                created_at 				  INTEGER DEFAULT date_part('epoch'::text, now())
+                );
+  
+  
+  
+  
+  
+  
+  
