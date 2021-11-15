@@ -79,6 +79,10 @@ Connection options (hints):
                 );
   
   
+ ------------------------------------------------------------------------- LOCALHOST POSGRES LOGIN ---------------------------
+ 
+ psql -h localhost -U shiva -W 
+ password: 12345
   
   
   
