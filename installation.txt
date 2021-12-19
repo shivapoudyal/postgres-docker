@@ -79,7 +79,7 @@ Connection options (hints):
                 );
   
   
-   INSERT INTO public.shiva_table (name, status) values ('Alex', 'A');
+   INSERT INTO public.shiva_table (name, status) values ('Alex', 'Active');
   
  ------------------------------------------------------------------------- LOCALHOST POSGRES LOGIN ---------------------------
  
