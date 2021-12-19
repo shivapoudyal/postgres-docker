@@ -79,6 +79,8 @@ Connection options (hints):
                 );
   
   
+   INSERT INTO public.shiva_table (name, status) values ('Alex', 'A');
+  
  ------------------------------------------------------------------------- LOCALHOST POSGRES LOGIN ---------------------------
  
  psql -h localhost -U postgres -W 
