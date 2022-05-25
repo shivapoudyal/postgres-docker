@@ -26,6 +26,16 @@
 
 
 
+------------------ Change Postgres Role User password ----------------
+
+1) First login to postgres :- 
+     psql -U shivapoudyal (shivapoudyal is system username, postgresql creates by default system root username)
+     
+2) After login hit below command in psql cli
+    \password shivapoudyal (create new password, now can use username/password in db connection with app)
+
+
+
 ------------------- After login to postgres -------------------
 
 
