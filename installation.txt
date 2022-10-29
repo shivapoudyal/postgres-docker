@@ -87,7 +87,7 @@ v)      Password = postgres paswd (user paswd)
 
 
 ---------------------------------------------------------------- LOGIN TO POSTGES USING CLI --------------------------------------------
-psql -U username -h hostname -W password
+psql -U username -h hostname db_name -W password     #db_name is optional and applicable only when have to login to a particular db
 
 Connection options (hints):
   -h HOSTNAME database server host or socket directory (default: "local socket")
