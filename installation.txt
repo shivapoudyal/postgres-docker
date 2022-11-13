@@ -108,14 +108,21 @@ Connection options (hints):
   
   
    INSERT INTO public.shiva_table (name, status) values ('Alex', 'Active');
+   
   
  ------------------------------------------------------------------------- LOCALHOST POSGRES LOGIN ---------------------------
  
  psql -h localhost -U postgres -W 
  password: root
   
+  
   ------------------------------------------------------- LOGIN TO POSTGES RDS --------------------------------------------
 
   psql -U admin123 -h anyhost -d my_db  #password is admin123 (tmp)
   
+  
+  
+  ------------------------------------------------ LIST USERS IN PSQL (without login)--------------------------------------
+  
+  psql -l
   
