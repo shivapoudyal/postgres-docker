@@ -103,6 +103,7 @@ Connection options (hints):
                 id  			  		  SERIAL PRIMARY KEY,
                 name     TEXT      NULL,
                 status       VARCHAR(50) NOT NULL,
+                env       CHAR(50) NOT NULL DEFAULT 'DEV',
                 created_at 				  INTEGER DEFAULT date_part('epoch'::text, now())
                 );
   
